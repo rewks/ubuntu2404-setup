@@ -189,6 +189,7 @@ sed -Ei 's/^(DNS[[:space:]]*= )On/\1Off/' /opt/Responder/Responder.conf
 sed -i 's/^Challenge = Random/Challenge = 1122334455667788/' /opt/Responder/Responder.conf
 sed -i 's/= certs/= \/opt\/Responder\/certs/g' /opt/Responder/Responder.conf
 sed -i 's/certs/\/opt\/Responder\/certs/g' /opt/Responder/certs/gen-self-signed-cert.sh
+/opt/Responder/certs/gen-self-signed-cert.sh
 
 mkdir -p ~/.venvs
 
