@@ -250,5 +250,5 @@ alias cat='batcat -P'
 alias responder='sudo python3 /opt/Responder/Responder.py'
 alias ffuf='ffuf -c -ic'
 
-export PATH=$PATH:/usr/local/go/bin:~/go/bin:~/.local/share/gem/ruby/3.2.0/bin
+export PATH=\$PATH:/usr/local/go/bin:~/go/bin:~/.local/share/gem/ruby/3.2.0/bin
 EOF
