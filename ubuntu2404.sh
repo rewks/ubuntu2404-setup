@@ -115,7 +115,7 @@ sudo apt update && sudo apt install terraform -y
 pipx install --include-deps ansible
 
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
-unzip /tmp/awscliv2.zip -O /tmp/aws
+unzip /tmp/awscliv2.zip -d /tmp
 sudo /tmp/aws/install
 rm -rf /tmp/aws /tmp/awscliv2.zip
 
@@ -127,6 +127,8 @@ security_packages=(
     wireshark
     proxychains4
     netcat-traditional
+    snmp
+    snmp-mibs-downloader
 )
 
 sudo apt install "${security_packages[@]}" -y
@@ -134,12 +136,15 @@ sudo usermod -aG wireshark $(whoami)
 sudo rm /etc/alternatives/nc
 sudo ln -s /usr/bin/nc.traditional /etc/alternatives/nc
 
+pipx install impacket
 pipx install git+https://github.com/Pennyw0rth/NetExec
-sudo gem install winrm
-sudo gem install winrm-fs
-sudo gem install rex-text
-sudo gem install evil-winrm
-sudo gem install wpscan
+pipx install bbot
+
+sudo gem install --user-install winrm
+sudo gem install --user-install winrm-fs
+sudo gem install --user-install rex-text
+sudo gem install --user-install evil-winrm
+sudo gem install --user-install wpscan
 
 declare -A scripts=(
   ["sort_domains.py"]="https://gist.githubusercontent.com/rewks/ad01f1ecacc68f16a8369da3cf36dd3a/raw/d1f0b0537107fdf5db5d816c7edb373680bd4fac/sort_domains.py"
@@ -156,27 +161,93 @@ done
 
 go install github.com/sensepost/gowitness@latest
 go install github.com/projectdiscovery/httpx/cmd/httpx@latest
-go install github.com/ffuf/ffuf@latest
+go install github.com/ffuf/ffuf/v2@latest
 go install github.com/ropnop/kerbrute@latest
+go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
 
 mkdir -p /tmp/nbtscan
 wget http://www.unixwiz.net/tools/nbtscan-source-1.0.35.tgz -O /tmp/nbtscan-source-1.0.35.tgz
 tar -xzf /tmp/nbtscan-source-1.0.35.tgz -C /tmp/nbtscan/
-cd /tmp/nbtscan && make
+cd /tmp/nbtscan
+make
 sudo mv nbtscan /usr/local/bin/nbtscan
 cd -
 rm -rf /tmp/nbtscan /tmp/nbtscan-source-1.0.35.tgz
 
 git clone https://github.com/trailofbits/onesixtyone.git /tmp/onesixtyone
-cd onesixtyone
+cd /tmp/onesixtyone
 gcc -o onesixtyone onesixtyone.c
 sudo mv onesixtyone /usr/local/bin/onesixtyone
 cd -
 rm -rf /tmp/onesixtyone
+
+sudo chown root:$(whoami) /opt
+sudo chmod 774 /opt
+
+git clone https://github.com/lgandx/Responder.git /opt/Responder
+sed -Ei 's/^(DNS[[:space:]]*= )On/\1Off/' /opt/Responder/Responder.conf
+sed -i 's/^Challenge = Random/Challenge = 1122334455667788/' /opt/Responder/Responder.conf
+sed -i 's/= certs/= \/opt\/Responder\/certs/g' /opt/Responder/Responder.conf
+sed -i 's/certs/\/opt\/Responder\/certs/g' /opt/Responder/certs/gen-self-signed-cert.sh
+
+mkdir -p ~/.venvs
+
+python3 -m venv ~/.venvs/mitm6
+source ~/.venvs/mitm6/bin/activate
+pip install mitm6
+deactivate
+
+python3 -m venv ~/.venvs/sqlmap
+source ~/.venvs/sqlmap/bin/activate
+pip install sqlmap
+deactivate
+
+git clone https://github.com/cddmp/enum4linux-ng.git /opt/enum4linux-ng
+python3 -m venv ~/.venvs/enum4linux
+source ~/.venvs/enum4linux/bin/activate
+pip install -r /opt/enum4linux-ng/requirements.txt
+ln -s /opt/enum4linux-ng/enum4linux-ng.py ~/.venvs/enum4linux/bin/enum4linux
+deactivate
+
+git clone https://github.com/ticarpi/jwt_tool.git /opt/jwt_tool
+chmod +x /opt/jwt_tool/jwt_tool.py
+python3 -m venv ~/.venvs/jwt_tool
+source ~/.venvs/jwt_tool/bin/activate
+pip install -r /opt/jwt_tool/requirements.txt
+ln -s /opt/jwt_tool/jwt_tool.py ~/.venvs/jwt_tool/bin/jwt_tool
+deactivate
+
+curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > /tmp/msfinstall
+chmod 755 /tmp/msfinstall
+sudo /tmp/msfinstall
+rm /tmp/msfinstall
+
+git clone https://github.com/danielmiessler/SecLists.git /opt/SecLists
+tar xzvf /opt/SecLists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /opt/SecLists/Passwords/
+
+mkdir -p ~/tools/linux
+cp /usr/bin/nc.traditional ~/tools/linux/nc
+curl https://raw.githubusercontent.com/Anon-Exploiter/SUID3NUM/master/suid3num.py -o ~/tools/linux/suid3num.py && chmod 755 ~/tools/linux/suid3num.py
+curl https://github.com/DominicBreuker/pspy/releases/download/v1.2.1/pspy64 -o ~/tools/linux/pspy64 && chmod 755 ~/tools/linux/pspy64
+curl https://github.com/peass-ng/PEASS-ng/releases/download/20241001-329fed76/linpeas.sh -o ~/tools/linux/linpeas.sh && chmod 755 ~/tools/linux/linpeas.sh
+
+mkdir -p ~/tools/windows
+curl https://github.com/peass-ng/PEASS-ng/releases/download/20241001-329fed76/winPEAS.bat -o ~/tools/windows/winPEAS.bat
+curl https://github.com/peass-ng/PEASS-ng/releases/download/20241001-329fed76/winPEASx64.exe -o ~/tools/windows/winPEASx64.exe
+curl https://github.com/peass-ng/PEASS-ng/releases/download/20241001-329fed76/winPEASx86.exe -o ~/tools/windows/winPEASx86.exe
+curl https://download.sysinternals.com/files/SysinternalsSuite.zip -o ~/tools/windows/SysinternalsSuite.zip
+mkdir -p ~/tools/windows/sysinternals
+unzip ~/tools/windows/SysinternalsSuite.zip -d ~/tools/windows/sysinternals/
+
+echo -e "\e[1;31mIMPORTANT:\e[0m\nManual interaction needed to complete setup: run nvim and then type :MasonInstallAll"
 
 cat <<EOF >> ~/.bashrc
 alias vi='nvim'
 alias ls='lsd'
 alias fd='fdfind'
 alias cat='batcat -P'
+alias responder='sudo python3 /opt/Responder/Responder.py'
+alias ffuf='ffuf -c -ic'
+
+export PATH=$PATH:/usr/local/go/bin:~/go/bin:~/.local/share/gem/ruby/3.2.0/bin
 EOF
