@@ -94,11 +94,16 @@ sudo apt install "${utility_packages[@]}" -y
 git config --global user.name $git_username
 git config --global user.email $git_email
 
+mkdir -p ~/.config/lsd
+curl https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/lsd_config.yaml -o ~/.config/lsd/config.yaml
+https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/lsd_colors.yaml -o ~/.config/lsd/colors.yaml
+
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/IosevkaTerm.zip -O /tmp/IosevkaTerm.zip
 sudo mkdir -p /usr/share/fonts/iosevka
 sudo unzip /tmp/IosevkaTerm.zip -d /usr/share/fonts/iosevka/
 rm /tmp/IosevkaTerm.zip
-# Needs to be manually selected in terminal preferences, recommend IosevkaTerm Nerd Font Medium size 13
+sudo fc-cache -f -v
+wget https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/terminator_config -O ~/.config/terminator/config
 
 wget https://github.com/neovim/neovim/releases/download/v0.10.1/nvim-linux64.tar.gz -O /tmp/nvim-linux64.tar.gz
 sudo tar xzvf /tmp/nvim-linux64.tar.gz -C /usr/share/
@@ -106,6 +111,8 @@ sudo ln -s /usr/share/nvim-linux64/bin/nvim /usr/local/bin/nvim
 rm /tmp/nvim-linux64.tar.gz
 
 git clone https://github.com/NvChad/starter ~/.config/nvim  && rm -rf ~/.config/nvim/.git # Need to run nvim and then type :MasonInstallAll
+curl https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/nvim_chadrc.lua -o ~/.config/nvim/lua/chadrc.lua
+curl https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/nvim_mappings.lua -o ~/.config/nvim/lua/mappings.lua
 
 # Install DevOps tools
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
@@ -240,7 +247,9 @@ curl https://download.sysinternals.com/files/SysinternalsSuite.zip -o ~/tools/wi
 mkdir -p ~/tools/windows/sysinternals
 unzip ~/tools/windows/SysinternalsSuite.zip -d ~/tools/windows/sysinternals/
 
-echo -e "\e[1;31mIMPORTANT:\e[0m\nManual interaction needed to complete setup: run nvim and then type :MasonInstallAll"
+echo -e "\e[1;31mIMPORTANT:\e[0m"
+echo "- Manual interaction needed to complete setup: run nvim and then type :MasonInstallAll"
+echo "- "
 
 cat <<EOF >> ~/.bashrc
 alias vi='nvim'
