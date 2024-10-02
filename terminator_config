@@ -1,0 +1,28 @@
+[global_config]
+[keybindings]
+[profiles]
+  [[default]]
+    background_darkness = 0.82
+    background_type = transparent
+    font = IosevkaTerm Nerd Font Medium 13
+    scrollback_infinite = True
+    use_system_font = False
+  [[dark]]
+    font = IosevkaTerm Nerd Font Medium 13
+    scrollback_infinite = True
+    use_system_font = False
+  [[light]]
+    background_color = "#ffffff"
+    font = IosevkaTerm Nerd Font Medium 13
+    foreground_color = "#000000"
+    scrollback_infinite = True
+    use_system_font = False
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+[plugins]
