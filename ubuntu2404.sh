@@ -77,6 +77,7 @@ sudo apt install code -y
 # Install utility packages
 utility_packages=(
     terminator
+    xclip
     lsd
     fd-find
     bat
@@ -122,6 +123,7 @@ rm /tmp/nvim-linux64.tar.gz
 git clone https://github.com/NvChad/starter ~/.config/nvim  && rm -rf ~/.config/nvim/.git # Need to run nvim and then type :MasonInstallAll
 curl https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/nvim_chadrc.lua -o ~/.config/nvim/lua/chadrc.lua
 curl https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/nvim_mappings.lua -o ~/.config/nvim/lua/mappings.lua
+echo 'vim.opt.clipboard = "unnamedplus"' >> ~/.config/nvim/init.lua
 
 # Install DevOps tools: terraform, ansible and aws cli
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
@@ -223,6 +225,16 @@ deactivate
 python3 -m venv ~/.venvs/sqlmap
 source ~/.venvs/sqlmap/bin/activate
 pip install sqlmap
+deactivate
+
+python3 -m venv ~/.venvs/coercer
+source ~/.venvs/coercer/bin/activate
+pip install coercer
+deactivate
+
+python3 -m venv ~/.venvs/certipy
+source ~/.venvs/certipy/bin/activate
+pip install certipy-ad
 deactivate
 
 git clone https://github.com/cddmp/enum4linux-ng.git /opt/enum4linux-ng
