@@ -65,7 +65,6 @@ pipx ensurepath
 wget https://go.dev/dl/go1.23.1.linux-amd64.tar.gz -O /tmp/go1.23.1.linux-amd64.tar.gz
 sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf /tmp/go1.23.1.linux-amd64.tar.gz
 sudo rm /tmp/go1.23.1.linux-amd64.tar.gz
-PATH=$PATH:/usr/local/go/bin
 
 # Install vs code
 wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
@@ -101,7 +100,7 @@ git config --global user.email $git_email
 # Download lsd config files
 mkdir -p ~/.config/lsd
 curl https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/lsd_config.yaml -o ~/.config/lsd/config.yaml
-https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/lsd_colors.yaml -o ~/.config/lsd/colors.yaml
+curl https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/lsd_colors.yaml -o ~/.config/lsd/colors.yaml
 
 # Download and install Iosevka nerd font
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/IosevkaTerm.zip -O /tmp/IosevkaTerm.zip
@@ -157,11 +156,11 @@ pipx install impacket
 pipx install git+https://github.com/Pennyw0rth/NetExec
 pipx install bbot
 
-sudo gem install --user-install winrm
-sudo gem install --user-install winrm-fs
-sudo gem install --user-install rex-text
-sudo gem install --user-install evil-winrm
-sudo gem install --user-install wpscan
+gem install --user-install winrm
+gem install --user-install winrm-fs
+gem install --user-install rex-text
+gem install --user-install evil-winrm
+gem install --user-install wpscan
 
 # Download standalone scripts/tools
 declare -A scripts=(
@@ -178,11 +177,11 @@ for filename in "${!scripts[@]}"; do
 done
 
 # Install golang tools
-go install github.com/sensepost/gowitness@latest
-go install github.com/projectdiscovery/httpx/cmd/httpx@latest
-go install github.com/ffuf/ffuf/v2@latest
-go install github.com/ropnop/kerbrute@latest
-go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+/usr/local/go/bin/go install github.com/sensepost/gowitness@latest
+/usr/local/go/bin/go install github.com/projectdiscovery/httpx/cmd/httpx@latest
+/usr/local/go/bin/go install github.com/ffuf/ffuf/v2@latest
+/usr/local/go/bin/go install github.com/ropnop/kerbrute@latest
+/usr/local/go/bin/go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
 
 # Download and build nbtscan (unixwiz version)
 mkdir -p /tmp/nbtscan
