@@ -1,7 +1,7 @@
 #!/bin/bash
 ##
 # AUTHOR: rewks
-# LAST UPDATED: 01/10/2024
+# LAST UPDATED: 05/10/2024
 # DESCRIPTION: Handles basic installation and configuration of a newly installed Ubuntu 24.04
 ##
 git_username="rewks"
@@ -277,6 +277,29 @@ curl https://download.sysinternals.com/files/SysinternalsSuite.zip -o ~/tools/wi
 mkdir -p ~/tools/windows/sysinternals
 unzip ~/tools/windows/SysinternalsSuite.zip -d ~/tools/windows/sysinternals/
 
+# Install RE/pwn tools
+pwn_packages=(
+  gdbserver
+)
+
+sudo apt install "${pwn_packages[@]}" -y
+
+latest_gef=$(curl -s https://api.github.com/repos/hugsy/gef/tags | jq -r '.[0].name')
+curl -s https://raw.githubusercontent.com/hugsy/gef/$latest_gef/gef.py -o /opt/gef.py
+echo 'set disassembly-flavor intel' >> ~/.gdbinit
+echo 'source /opt/gef.py' >> ~/.gdbinit
+
+python3 -m venv ~/.venvs/pwn
+source ~/.venvs/pwn/bin/activate
+pip install pwntools
+pip install capstone
+pip install filebytes
+pip install keystone-engine
+pip install ropper
+pip uninstall ROPgadget -y
+pip install ROPgadget
+deactivate
+
 # Add aliases and path update to .bashrc
 cat <<EOF >> ~/.bashrc
 alias vi='nvim'
@@ -285,6 +308,9 @@ alias fd='fdfind'
 alias cat='batcat -P'
 alias responder='sudo python3 /opt/Responder/Responder.py'
 alias ffuf='ffuf -c -ic'
+alias gdb='gdb -q'
+alias pattern_create='/opt/metasploit-framework/embedded/framework/tools/exploit/pattern_create.rb'
+alias pattern_offset='/opt/metasploit-framework/embedded/framework/tools/exploit/pattern_offset.rb'
 
 export PATH=\$PATH:/usr/local/go/bin:~/go/bin:~/.local/share/gem/ruby/3.2.0/bin
 EOF
