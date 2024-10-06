@@ -1,7 +1,7 @@
 #!/bin/bash
 ##
 # AUTHOR: rewks
-# LAST UPDATED: 05/10/2024
+# LAST UPDATED: 06/10/2024
 # DESCRIPTION: Handles basic installation and configuration of a newly installed Ubuntu 24.04
 ##
 git_username="rewks"
@@ -264,18 +264,31 @@ tar xzvf /opt/SecLists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /opt/Sec
 
 # Gather commonly used postex tools
 mkdir -p ~/tools/linux
-cp /usr/bin/nc.traditional ~/tools/linux/nc
-curl https://raw.githubusercontent.com/Anon-Exploiter/SUID3NUM/master/suid3num.py -o ~/tools/linux/suid3num.py && chmod 755 ~/tools/linux/suid3num.py
-curl https://github.com/DominicBreuker/pspy/releases/download/v1.2.1/pspy64 -o ~/tools/linux/pspy64 && chmod 755 ~/tools/linux/pspy64
-curl https://github.com/peass-ng/PEASS-ng/releases/download/20241001-329fed76/linpeas.sh -o ~/tools/linux/linpeas.sh && chmod 755 ~/tools/linux/linpeas.sh
+mkdir -p $HOME/tools/windows/sysinternals
 
-mkdir -p ~/tools/windows
-curl https://github.com/peass-ng/PEASS-ng/releases/download/20241001-329fed76/winPEAS.bat -o ~/tools/windows/winPEAS.bat
-curl https://github.com/peass-ng/PEASS-ng/releases/download/20241001-329fed76/winPEASx64.exe -o ~/tools/windows/winPEASx64.exe
-curl https://github.com/peass-ng/PEASS-ng/releases/download/20241001-329fed76/winPEASx86.exe -o ~/tools/windows/winPEASx86.exe
+cp /usr/bin/nc.traditional ~/tools/linux/nc
+
+curl https://raw.githubusercontent.com/Anon-Exploiter/SUID3NUM/master/suid3num.py -o ~/tools/linux/suid3num.py && chmod 755 ~/tools/linux/suid3num.py
+
+pspy_url=$(curl -s https://api.github.com/repos/DominicBreuker/pspy/releases | jq -r '.[0].assets[] | select(.name == "pspy64") | .browser_download_url')
+curl -L -s -o $HOME/tools/linux/pspy64 $pspy_url
+chmod 755 $HOME/tools/linux/pspy64
+
 curl https://download.sysinternals.com/files/SysinternalsSuite.zip -o ~/tools/windows/SysinternalsSuite.zip
-mkdir -p ~/tools/windows/sysinternals
 unzip ~/tools/windows/SysinternalsSuite.zip -d ~/tools/windows/sysinternals/
+
+declare -A files=(
+  ["linpeas.sh"]="$HOME/tools/linux/linpeas.sh"
+  ["winPEAS.bat"]="$HOME/tools/windows/winPEAS.bat"
+  ["winPEASx64.exe"]="$HOME/tools/windows/winPEASx64.exe"
+  ["winPEASx86.exe"]="$HOME/tools/windows/winPEASx86.exe"
+)
+peas_releases=$(curl -s https://api.github.com/repos/peass-ng/PEASS-ng/releases)
+for file in "${!files[@]}"; do
+  peas_url=$(echo $peas_releases | jq -r --arg file $file '.[0].assets[] | select(.name == $file) | .browser_download_url')
+  curl -L -s -o ${files[$file]} $peas_url
+done
+chmod 755 ~/tools/linux/linpeas.sh
 
 # Install RE/pwn tools
 pwn_packages=(
