@@ -1,7 +1,7 @@
 #!/bin/bash
 ##
 # AUTHOR: rewks
-# LAST UPDATED: 06/10/2024
+# LAST UPDATED: 07/10/2024
 # DESCRIPTION: Handles basic installation and configuration of a newly installed Ubuntu 24.04
 ##
 git_username="rewks"
@@ -99,9 +99,9 @@ git config --global user.name $git_username
 git config --global user.email $git_email
 
 # Download lsd config files
-mkdir -p ~/.config/lsd
-curl https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/lsd_config.yaml -o ~/.config/lsd/config.yaml
-curl https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/lsd_colors.yaml -o ~/.config/lsd/colors.yaml
+mkdir -p $HOME/.config/lsd
+curl -s https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/lsd_config.yaml -o $HOME/.config/lsd/config.yaml
+curl -s https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/lsd_colors.yaml -o $HOME/.config/lsd/colors.yaml
 
 # Download and install Iosevka nerd font
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/IosevkaTerm.zip -O /tmp/IosevkaTerm.zip
@@ -111,7 +111,8 @@ rm /tmp/IosevkaTerm.zip
 sudo fc-cache -f -v
 
 # Download terminator config file
-wget https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/terminator_config -O ~/.config/terminator/config
+mkdir -p $HOME/.config/terminator
+curl -s https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/terminator_config -o $HOME/.config/terminator/config
 
 # Install neovim
 wget https://github.com/neovim/neovim/releases/download/v0.10.1/nvim-linux64.tar.gz -O /tmp/nvim-linux64.tar.gz
@@ -120,10 +121,10 @@ sudo ln -s /usr/share/nvim-linux64/bin/nvim /usr/local/bin/nvim
 rm /tmp/nvim-linux64.tar.gz
 
 # Install NvChad and download config files
-git clone https://github.com/NvChad/starter ~/.config/nvim  && rm -rf ~/.config/nvim/.git # Need to run nvim and then type :MasonInstallAll
-curl https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/nvim_chadrc.lua -o ~/.config/nvim/lua/chadrc.lua
-curl https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/nvim_mappings.lua -o ~/.config/nvim/lua/mappings.lua
-echo 'vim.opt.clipboard = "unnamedplus"' >> ~/.config/nvim/init.lua
+git clone https://github.com/NvChad/starter $HOME/.config/nvim  && rm -rf $HOME/.config/nvim/.git # Need to run nvim and then type :MasonInstallAll
+curl -s https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/nvim_chadrc.lua -o $HOME/.config/nvim/lua/chadrc.lua
+curl -s https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/nvim_mappings.lua -o $HOME/.config/nvim/lua/mappings.lua
+echo 'vim.opt.clipboard = "unnamedplus"' >> $HOME/.config/nvim/init.lua
 
 # Install DevOps tools: terraform, ansible and aws cli
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
@@ -132,7 +133,7 @@ sudo apt update && sudo apt install terraform -y
 
 pipx install --include-deps ansible
 
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
+curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
 unzip /tmp/awscliv2.zip -d /tmp
 sudo /tmp/aws/install
 rm -rf /tmp/aws /tmp/awscliv2.zip
@@ -215,41 +216,41 @@ sed -i 's/certs/\/opt\/Responder\/certs/g' /opt/Responder/certs/gen-self-signed-
 /opt/Responder/certs/gen-self-signed-cert.sh
 
 # Create python virtual environments for individual tools
-mkdir -p ~/.venvs
+mkdir -p $HOME/.venvs
 
-python3 -m venv ~/.venvs/mitm6
-source ~/.venvs/mitm6/bin/activate
+python3 -m venv $HOME/.venvs/mitm6
+source $HOME/.venvs/mitm6/bin/activate
 pip install mitm6
 deactivate
 
-python3 -m venv ~/.venvs/sqlmap
-source ~/.venvs/sqlmap/bin/activate
+python3 -m venv $HOME/.venvs/sqlmap
+source $HOME/.venvs/sqlmap/bin/activate
 pip install sqlmap
 deactivate
 
-python3 -m venv ~/.venvs/coercer
-source ~/.venvs/coercer/bin/activate
+python3 -m venv $HOME/.venvs/coercer
+source $HOME/.venvs/coercer/bin/activate
 pip install coercer
 deactivate
 
-python3 -m venv ~/.venvs/certipy
-source ~/.venvs/certipy/bin/activate
+python3 -m venv $HOME/.venvs/certipy
+source $HOME/.venvs/certipy/bin/activate
 pip install certipy-ad
 deactivate
 
 git clone https://github.com/cddmp/enum4linux-ng.git /opt/enum4linux-ng
-python3 -m venv ~/.venvs/enum4linux
-source ~/.venvs/enum4linux/bin/activate
+python3 -m venv $HOME/.venvs/enum4linux
+source $HOME/.venvs/enum4linux/bin/activate
 pip install -r /opt/enum4linux-ng/requirements.txt
-ln -s /opt/enum4linux-ng/enum4linux-ng.py ~/.venvs/enum4linux/bin/enum4linux
+ln -s /opt/enum4linux-ng/enum4linux-ng.py $HOME/.venvs/enum4linux/bin/enum4linux
 deactivate
 
 git clone https://github.com/ticarpi/jwt_tool.git /opt/jwt_tool
 chmod +x /opt/jwt_tool/jwt_tool.py
-python3 -m venv ~/.venvs/jwt_tool
-source ~/.venvs/jwt_tool/bin/activate
+python3 -m venv $HOME/.venvs/jwt_tool
+source $HOME/.venvs/jwt_tool/bin/activate
 pip install -r /opt/jwt_tool/requirements.txt
-ln -s /opt/jwt_tool/jwt_tool.py ~/.venvs/jwt_tool/bin/jwt_tool
+ln -s /opt/jwt_tool/jwt_tool.py $HOME/.venvs/jwt_tool/bin/jwt_tool
 deactivate
 
 # Install metasploit
@@ -263,19 +264,20 @@ git clone https://github.com/danielmiessler/SecLists.git /opt/SecLists
 tar xzvf /opt/SecLists/Passwords/Leaked-Databases/rockyou.txt.tar.gz -C /opt/SecLists/Passwords/
 
 # Gather commonly used postex tools
-mkdir -p ~/tools/linux
+mkdir -p $HOME/tools/linux
 mkdir -p $HOME/tools/windows/sysinternals
 
-cp /usr/bin/nc.traditional ~/tools/linux/nc
+cp /usr/bin/nc.traditional $HOME/tools/linux/nc
 
-curl https://raw.githubusercontent.com/Anon-Exploiter/SUID3NUM/master/suid3num.py -o ~/tools/linux/suid3num.py && chmod 755 ~/tools/linux/suid3num.py
+curl -s https://raw.githubusercontent.com/Anon-Exploiter/SUID3NUM/master/suid3num.py -o $HOME/tools/linux/suid3num.py
+chmod 755 $HOME/tools/linux/suid3num.py
 
 pspy_url=$(curl -s https://api.github.com/repos/DominicBreuker/pspy/releases | jq -r '.[0].assets[] | select(.name == "pspy64") | .browser_download_url')
 curl -L -s -o $HOME/tools/linux/pspy64 $pspy_url
 chmod 755 $HOME/tools/linux/pspy64
 
-curl https://download.sysinternals.com/files/SysinternalsSuite.zip -o ~/tools/windows/SysinternalsSuite.zip
-unzip ~/tools/windows/SysinternalsSuite.zip -d ~/tools/windows/sysinternals/
+curl -s https://download.sysinternals.com/files/SysinternalsSuite.zip -o $HOME/tools/windows/SysinternalsSuite.zip
+unzip $HOME/tools/windows/SysinternalsSuite.zip -d $HOME/tools/windows/sysinternals/
 
 declare -A files=(
   ["linpeas.sh"]="$HOME/tools/linux/linpeas.sh"
@@ -288,7 +290,7 @@ for file in "${!files[@]}"; do
   peas_url=$(echo $peas_releases | jq -r --arg file $file '.[0].assets[] | select(.name == $file) | .browser_download_url')
   curl -L -s -o ${files[$file]} $peas_url
 done
-chmod 755 ~/tools/linux/linpeas.sh
+chmod 755 $HOME/tools/linux/linpeas.sh
 
 # Install RE/pwn tools
 pwn_packages=(
@@ -299,11 +301,11 @@ sudo apt install "${pwn_packages[@]}" -y
 
 latest_gef=$(curl -s https://api.github.com/repos/hugsy/gef/tags | jq -r '.[0].name')
 curl -s https://raw.githubusercontent.com/hugsy/gef/$latest_gef/gef.py -o /opt/gef.py
-echo 'set disassembly-flavor intel' >> ~/.gdbinit
-echo 'source /opt/gef.py' >> ~/.gdbinit
+echo 'set disassembly-flavor intel' >> $HOME/.gdbinit
+echo 'source /opt/gef.py' >> $HOME/.gdbinit
 
-python3 -m venv ~/.venvs/pwn
-source ~/.venvs/pwn/bin/activate
+python3 -m venv $HOME/.venvs/pwn
+source $HOME/.venvs/pwn/bin/activate
 pip install pwntools
 pip install capstone
 pip install filebytes
@@ -314,7 +316,7 @@ pip install ROPgadget
 deactivate
 
 # Add aliases and path update to .bashrc
-cat <<EOF >> ~/.bashrc
+cat <<EOF >> $HOME/.bashrc
 alias vi='nvim'
 alias ls='lsd'
 alias fd='fdfind'
@@ -325,7 +327,7 @@ alias gdb='gdb -q'
 alias pattern_create='/opt/metasploit-framework/embedded/framework/tools/exploit/pattern_create.rb'
 alias pattern_offset='/opt/metasploit-framework/embedded/framework/tools/exploit/pattern_offset.rb'
 
-export PATH=\$PATH:/usr/local/go/bin:~/go/bin:~/.local/share/gem/ruby/3.2.0/bin
+export PATH=\$PATH:/usr/local/go/bin:\$HOME/go/bin:\$HOME/.local/share/gem/ruby/3.2.0/bin
 EOF
 
 # Script finished, instructions for manual stuff
