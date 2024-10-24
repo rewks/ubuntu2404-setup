@@ -315,6 +315,11 @@ pip uninstall ROPgadget -y
 pip install ROPgadget
 deactivate
 
+latest_ghidra=$(curl -s https://api.github.com/repos/NationalSecurityAgency/ghidra/releases | jq -r '.[0].["assets"][0]["browser_download_url"]')
+wget $latest_ghidra -O /opt/ghidra.zip 
+unzip /opt/ghidra.zip -d /opt/
+rm /opt/ghidra.zip
+
 # Add aliases and path update to .bashrc
 cat <<EOF >> $HOME/.bashrc
 alias vi='nvim'
@@ -326,6 +331,7 @@ alias ffuf='ffuf -c -ic'
 alias gdb='gdb -q'
 alias pattern_create='/opt/metasploit-framework/embedded/framework/tools/exploit/pattern_create.rb'
 alias pattern_offset='/opt/metasploit-framework/embedded/framework/tools/exploit/pattern_offset.rb'
+alias ghidra='/opt/$(ls -1 /opt | grep ghidra)/ghidraRun'
 
 export PATH=\$PATH:/usr/local/go/bin:\$HOME/go/bin:\$HOME/.local/share/gem/ruby/3.2.0/bin
 EOF
