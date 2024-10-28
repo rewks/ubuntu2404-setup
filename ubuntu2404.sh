@@ -239,6 +239,11 @@ source $HOME/.venvs/certipy/bin/activate
 pip install certipy-ad
 deactivate
 
+python3 -m venv $HOME/.venvs/ssh-audit
+source $HOME/.venvs/ssh-audit/bin/activate
+pip install ssh-audit
+deactivate
+
 git clone https://github.com/cddmp/enum4linux-ng.git /opt/enum4linux-ng
 python3 -m venv $HOME/.venvs/enum4linux
 source $HOME/.venvs/enum4linux/bin/activate
