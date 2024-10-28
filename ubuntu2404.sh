@@ -148,6 +148,7 @@ security_packages=(
     netcat-traditional
     snmp
     snmp-mibs-downloader
+    sslscan
 )
 
 sudo apt install "${security_packages[@]}" -y
