@@ -13,6 +13,8 @@ unwanted_services=(
     cups-browsed.service
     cups.path
     cups.socket
+    snap.cups.cupsd.service
+    snap.cups.cups-browsed.service
     avahi-daemon
     avahi-daemon.socket
 )
@@ -23,6 +25,7 @@ for service in "${unwanted_services[@]}"; do
 done
 
 sudo apt purge cups avahi-daemon --autoremove
+sudo snap remove cups
 sudo rm -rf /etc/cups /etc/cupshelpers /etc/printcap /usr/share/cups /usr/share/hplip /run/avahi-daemon
 
 # Update repo lists and upgrade packages
