@@ -301,6 +301,19 @@ for file in "${!files[@]}"; do
 done
 chmod 755 $HOME/tools/linux/linpeas.sh
 
+mkdir -p $HOME/tools/ligolo-ng
+ligolo_linux_proxy_url=$(curl -s https://api.github.com/repos/nicocha30/ligolo-ng/releases | jq -r '.[0].assets[] | select(.name | test(".*linux_amd64.*")) | select(.name | test(".*proxy.*")) | .browser_download_url')
+ligolo_linux_agent_url=$(curl -s https://api.github.com/repos/nicocha30/ligolo-ng/releases | jq -r '.[0].assets[] | select(.name | test(".*linux_amd64.*")) | select(.name | test(".*agent.*")) | .browser_download_url')
+ligolo_windows_agent_url=$(curl -s https://api.github.com/repos/nicocha30/ligolo-ng/releases | jq -r '.[0].assets[] | select(.name | test(".*windows_amd64.*")) | select(.name | test(".*agent.*")) | .browser_download_url')
+curl -L -s -o /tmp/ligolo_linux_proxy.tar.gz $ligolo_linux_proxy_url
+curl -L -s -o /tmp/ligolo_linux_agent.tar.gz $ligolo_linux_agent_url
+curl -L -s -o /tmp/ligolo_windows_agent.zip $ligolo_windows_agent_url
+tar xzf /tmp/ligolo_linux_proxy.tar.gz -C $HOME/tools/ligolo-ng/
+tar xzf /tmp/ligolo_linux_agent.tar.gz -C $HOME/tools/ligolo-ng/
+unzip -q -n /tmp/ligolo_windows_agent.zip -d $HOME/tools/ligolo-ng/
+rm /tmp/ligolo*
+
+
 # Install RE/pwn tools
 pwn_packages=(
   gdbserver
