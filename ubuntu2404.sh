@@ -354,6 +354,7 @@ alias gdb='gdb -q'
 alias pattern_create='/opt/metasploit-framework/embedded/framework/tools/exploit/pattern_create.rb'
 alias pattern_offset='/opt/metasploit-framework/embedded/framework/tools/exploit/pattern_offset.rb'
 alias ghidra='/opt/$(ls -1 /opt | grep ghidra)/ghidraRun'
+alias ligolo-proxy="sudo $HOME/tools/ligolo-ng/proxy"
 
 export PATH=\$PATH:/usr/local/go/bin:\$HOME/go/bin:\$HOME/.local/share/gem/ruby/3.2.0/bin
 EOF
