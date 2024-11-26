@@ -93,6 +93,7 @@ utility_packages=(
     cifs-utils
     p7zip-full
     libreoffice-calc
+    remmina
 )
 
 sudo apt install "${utility_packages[@]}" -y
