@@ -130,7 +130,7 @@ curl -s https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main
 curl -s https://raw.githubusercontent.com/rewks/ubuntu2404-setup/refs/heads/main/nvim_mappings.lua -o $HOME/.config/nvim/lua/mappings.lua
 echo 'vim.opt.clipboard = "unnamedplus"' >> $HOME/.config/nvim/init.lua
 
-# Install DevOps tools: terraform, ansible and aws cli
+# Install DevOps tools: terraform, ansible and aws/az cli
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt update && sudo apt install terraform -y
@@ -141,6 +141,8 @@ curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awsc
 unzip /tmp/awscliv2.zip -d /tmp
 sudo /tmp/aws/install
 rm -rf /tmp/aws /tmp/awscliv2.zip
+
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
 # Install networking/security/ctf packages
 security_packages=(
